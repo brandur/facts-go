@@ -1,10 +1,33 @@
 package main
 
 import (
+	"io/ioutil"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// Loads all the actual data files. Provides a basic sanity check, but
+// obviously not recommended for debugging.
+func TestActual(t *testing.T) {
+	files, err := filepath.Glob("./categories/*.md")
+	assert.Nil(t, err)
+
+	var facts []*Fact
+
+	for _, file := range files {
+		data, err := ioutil.ReadFile(file)
+		assert.Nil(t, err)
+
+		_, fileFacts, err := parseMarkdown(string(data))
+		assert.Nil(t, err)
+
+		facts = append(facts, fileFacts...)
+	}
+
+	assert.NotEqual(t, 0, len(facts))
+}
 
 func TestParseMarkdown_Complete(t *testing.T) {
 	str := `
