@@ -14,3 +14,5 @@
     * Makeshift tent cities were set in the area's parks and beaches. More than two years later, many of these camps were still in operation.
 * 1906 San Francisco earthquake cost?
     * Total cost at US$400M ($8.2B in 2009 dollars).
+* 1906 San Francisco earthquake policing?
+    * Police and army were authorized by the Mayor to kill any looters.
