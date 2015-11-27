@@ -43,9 +43,9 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 	// current parsing state
 	var buf bytes.Buffer
 	var fact *Fact
-	inIndent := false
 	inHeader := false
 	inNote := false
+	indentCount := 0
 	whitespaceCount := 0
 
 	enableDebug := false
@@ -64,7 +64,7 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 
 	debug := func(format string, a ...interface{}) {
 		if enableDebug {
-			a = append(a, toB(inIndent), toB(inHeader), toB(inNote))
+			a = append(a, indentCount, toB(inHeader), toB(inNote))
 			fmt.Printf("scanner: "+format+"\t\t(indent=%v header=%v note=%v)\n", a...)
 		}
 	}
@@ -94,7 +94,8 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 			} else {
 				whitespaceCount += 1
 				if whitespaceCount == 4 {
-					inIndent = true
+					indentCount += 1
+					whitespaceCount = 0
 				}
 			}
 
@@ -107,7 +108,7 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 			trimmed := strings.TrimSpace(buf.String())
 
 			if inNote && trimmed != "" {
-				if !inIndent {
+				if indentCount == 0 {
 					debugPlain("FACT (front): %v\n", trimmed)
 					fact = &Fact{Front: trimmed}
 					facts = append(facts, fact)
@@ -126,8 +127,9 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 
 			buf.Reset()
 			inHeader = false
-			inIndent = false
 			inNote = false
+			indentCount = 0
+			whitespaceCount = 0
 
 		case "#":
 			debug("#")
