@@ -191,7 +191,7 @@ func main() {
 
 		// add header as a tag to all facts
 		if header != "" {
-			for _, fact := range facts {
+			for _, fact := range fileFacts {
 				fact.Tags = []string{header}
 			}
 		}
