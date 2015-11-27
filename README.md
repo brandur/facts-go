@@ -13,3 +13,9 @@ facts-go
 ```
 
 Then look for the output file `facts.tsv`.
+
+## Test
+
+```
+go test
+```
