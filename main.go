@@ -32,7 +32,7 @@ func dataFiles() ([]string, error) {
 	return filepath.Glob(path)
 }
 
-func parseMarkdown(str string) ([]*Fact, error) {
+func parseMarkdown(str string) (string, []*Fact, error) {
 	var s scanner.Scanner
 	var tok rune
 
@@ -106,7 +106,7 @@ func parseMarkdown(str string) ([]*Fact, error) {
 			// whitespace
 			trimmed := strings.TrimSpace(buf.String())
 
-			if inNote {
+			if inNote && trimmed != "" {
 				if !inIndent {
 					debugPlain("FACT (front): %v\n", trimmed)
 					fact = &Fact{Front: trimmed}
@@ -134,6 +134,8 @@ func parseMarkdown(str string) ([]*Fact, error) {
 
 			if !inHeader && !inNote {
 				inHeader = true
+			} else {
+				buf.WriteString(s.TokenText())
 			}
 
 		case "*":
@@ -141,6 +143,8 @@ func parseMarkdown(str string) ([]*Fact, error) {
 
 			if !inHeader && !inNote {
 				inNote = true
+			} else {
+				buf.WriteString(s.TokenText())
 			}
 
 		default:
@@ -155,14 +159,7 @@ func parseMarkdown(str string) ([]*Fact, error) {
 		}
 	}
 
-	// add header as a tag to all facts
-	if header != "" {
-		for _, fact := range facts {
-			fact.Tags = []string{header}
-		}
-	}
-
-	return facts, nil
+	return header, facts, nil
 }
 
 func main() {
@@ -179,9 +176,16 @@ func main() {
 			panic(err)
 		}
 
-		fileFacts, err := parseMarkdown(string(data))
+		header, fileFacts, err := parseMarkdown(string(data))
 		if err != nil {
 			panic(err)
+		}
+
+		// add header as a tag to all facts
+		if header != "" {
+			for _, fact := range facts {
+				fact.Tags = []string{header}
+			}
 		}
 
 		facts = append(facts, fileFacts...)
