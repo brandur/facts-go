@@ -64,8 +64,9 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 
 	debug := func(format string, a ...interface{}) {
 		if enableDebug {
+			info := "(indent=%v header=%v note=%v)"
 			a = append(a, indentCount, toB(inHeader), toB(inNote))
-			fmt.Printf("scanner: "+format+"\t\t(indent=%v header=%v note=%v)\n", a...)
+			fmt.Printf("scanner: "+format+"\t\t"+info+"\n", a...)
 		}
 	}
 
