@@ -32,6 +32,14 @@ func dataFiles() ([]string, error) {
 	return filepath.Glob(path)
 }
 
+func debugEnabled() bool {
+	if os.Getenv("FACTS_DEBUG") == "true" {
+		return true
+	} else {
+		return false
+	}
+}
+
 func parseMarkdown(str string) (string, []*Fact, error) {
 	var s scanner.Scanner
 	var tok rune
@@ -48,10 +56,7 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 	indentCount := 0
 	whitespaceCount := 0
 
-	enableDebug := false
-	if os.Getenv("FACTS_DEBUG") == "true" {
-		enableDebug = true
-	}
+	enableDebug := debugEnabled()
 
 	// just makes output a little more succinct
 	toB := func(b bool) string {
@@ -195,8 +200,12 @@ func main() {
 	}
 
 	var buf bytes.Buffer
+	enableDebug := debugEnabled()
 	for _, fact := range facts {
-		//fmt.Printf("fact: %v\n", *fact)
+		if enableDebug {
+			fmt.Printf("fact: %v\n", *fact)
+		}
+
 		buf.WriteString(fact.Front)
 		buf.WriteString("\t")
 		buf.WriteString(fact.Back)
