@@ -18,6 +18,16 @@ type Fact struct {
 	Tags  []string
 }
 
+// Just makes output a little more succint for debugging lines so we can show
+// more information.
+func boolToString(b bool) string {
+	if b {
+		return "t"
+	} else {
+		return "f"
+	}
+}
+
 func dataFiles() ([]string, error) {
 	filename, err := osext.Executable()
 	if err != nil {
@@ -58,19 +68,10 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 
 	enableDebug := debugEnabled()
 
-	// just makes output a little more succinct
-	toB := func(b bool) string {
-		if b {
-			return "t"
-		} else {
-			return "f"
-		}
-	}
-
 	debug := func(format string, a ...interface{}) {
 		if enableDebug {
 			info := "(indent=%v header=%v note=%v)"
-			a = append(a, indentCount, toB(inHeader), toB(inNote))
+			a = append(a, indentCount, boolToString(inHeader), boolToString(inNote))
 			fmt.Printf("scanner: "+format+"\t\t"+info+"\n", a...)
 		}
 	}
