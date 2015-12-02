@@ -18,6 +18,16 @@ type Fact struct {
 	Tags  []string
 }
 
+var (
+	debugEnabled bool
+)
+
+func init() {
+	if os.Getenv("FACTS_DEBUG") == "true" {
+		debugEnabled = true
+	}
+}
+
 // Just makes output a little more succint for debugging lines so we can show
 // more information.
 func boolToString(b bool) string {
@@ -42,14 +52,6 @@ func dataFiles() ([]string, error) {
 	return filepath.Glob(path)
 }
 
-func debugEnabled() bool {
-	if os.Getenv("FACTS_DEBUG") == "true" {
-		return true
-	} else {
-		return false
-	}
-}
-
 func parseMarkdown(str string) (string, []*Fact, error) {
 	var s scanner.Scanner
 	var tok rune
@@ -66,10 +68,8 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 	indentCount := 0
 	whitespaceCount := 0
 
-	enableDebug := debugEnabled()
-
 	debug := func(format string, a ...interface{}) {
-		if enableDebug {
+		if debugEnabled {
 			info := "(indent=%v header=%v note=%v)"
 			a = append(a, indentCount, boolToString(inHeader), boolToString(inNote))
 			fmt.Printf("scanner: "+format+"\t\t"+info+"\n", a...)
@@ -77,7 +77,7 @@ func parseMarkdown(str string) (string, []*Fact, error) {
 	}
 
 	debugPlain := func(format string, a ...interface{}) {
-		if enableDebug {
+		if debugEnabled {
 			fmt.Printf("scanner: "+format+"\n", a...)
 		}
 	}
@@ -201,9 +201,8 @@ func main() {
 	}
 
 	var buf bytes.Buffer
-	enableDebug := debugEnabled()
 	for _, fact := range facts {
-		if enableDebug {
+		if debugEnabled {
 			fmt.Printf("fact: %v\n", *fact)
 		}
 
