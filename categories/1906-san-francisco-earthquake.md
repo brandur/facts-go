@@ -9,7 +9,7 @@
 * 1906 San Francisco earthquake cause?
     * A rupture on the San Andreas Fault.
 * California worst natural disaster?
-    * The 1906 San Francisco earthquake is one of the top three worst natural disasters in the history of the USA along with the Galveston Hurricane of 1900 and Hurrican Katrina in 2005. Worst disaster in California's history.
+    * The 1906 San Francisco earthquake is one of the top three worst natural disasters in the history of the USA along with the Galveston Hurricane of 1900 and Hurricane Katrina in 2005. Worst disaster in California's history.
 * 1906 San Francisco earthquake relief encampments?
     * Makeshift tent cities were set in the area's parks and beaches. More than two years later, many of these camps were still in operation.
 * 1906 San Francisco earthquake cost?
